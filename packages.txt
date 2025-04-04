@@ -9,6 +9,9 @@ Packages Installed:
 3) godotenv:
     go get github.com/joho/godotenv   
 
+4) gin:
+    go get -u github.com/gin-gonic/gin
+
 
 
 
