@@ -1,0 +1,16 @@
+Packages Installed:
+
+1) pgx - PostgreSQL Driver and Toolkit:
+    go get github.com/jackc/pgx/v5
+
+2) Clean Env:
+    go get -u github.com/ilyakaznacheev/cleanenv
+
+3) godotenv:
+    go get github.com/joho/godotenv   
+
+
+
+
+
+
