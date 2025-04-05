@@ -7,8 +7,8 @@ import (
 
 type Task struct {
 	ID          int64  `json:"id"`
-	Title       string `json:"title"`
-	Description string `json:"description"`
+	Title       string `json:"title" binding:"required"`
+	Description string `json:"description" binding:"required"`
 	Deadline    Date   `json:"deadline"`
 }
 
@@ -30,4 +30,9 @@ func (d *Date) UnmarshalJSON(b []byte) error {
 
 	d.Time = t
 	return nil
+}
+
+func (d Date) MarshalJSON() ([]byte, error) {
+	formatted := fmt.Sprintf("\"%s\"", d.Time.Format("2006-01-02"))
+	return []byte(formatted), nil
 }

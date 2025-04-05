@@ -12,33 +12,35 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/kartikey1188/go-todo-list-v2/internal/config"
+	"github.com/kartikey1188/go-todo-list-v2/internal/http/handlers/task"
 	"github.com/kartikey1188/go-todo-list-v2/internal/storage/neondb"
 )
 
 func main() {
-	// load config
+	// loading config
 
 	cfg := config.MustLoad()
 
-	// setup database
+	// setting up database
 
-	_, err := neondb.New(cfg)
+	storage, err := neondb.New(cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	slog.Info("storage initialized", slog.String("env", cfg.Env), slog.String("version", "1.0.0"))
 
-	// setup router
+	// setting up router
+
 	router := gin.Default()
 
-	// router.POST("/api/tasks", task.New(storage))
-	// router.GET("/api/tasks/:id", task.GetById(storage)) // Use :id for path param
-	// router.GET("/api/tasks", task.GetList(storage))
-	// router.PUT("/api/tasks/:id", task.Update(storage))    // Use :id for path param
-	// router.DELETE("/api/tasks/:id", task.Delete(storage)) // Use :id for path param
+	router.POST("/api/tasks", task.New(storage))
+	router.GET("/api/tasks/:id", task.GetById(storage))
+	router.GET("/api/tasks", task.GetList(storage))
+	// router.PUT("/api/tasks/:id", task.Update(storage))
+	// router.DELETE("/api/tasks/:id", task.Delete(storage))
 
-	//setup server
+	//setting up server (with graceful shutdown)
 
 	server := http.Server{
 		Addr:    cfg.Addr,
