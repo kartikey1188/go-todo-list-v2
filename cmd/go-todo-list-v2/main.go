@@ -22,7 +22,7 @@ func main() {
 
 	// setup database
 
-	storage, err := neondb.New(cfg)
+	_, err := neondb.New(cfg)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -32,11 +32,11 @@ func main() {
 	// setup router
 	router := gin.Default()
 
-	router.POST("/api/students", task.New(storage))
-	// router.GET("/api/students/:id", task.GetById(storage)) // Use :id for path param
-	// router.GET("/api/students", task.GetList(storage))
-	// router.PUT("/api/students/:id", task.Update(storage))    // Use :id for path param
-	// router.DELETE("/api/students/:id", task.Delete(storage)) // Use :id for path param
+	// router.POST("/api/tasks", task.New(storage))
+	// router.GET("/api/tasks/:id", task.GetById(storage)) // Use :id for path param
+	// router.GET("/api/tasks", task.GetList(storage))
+	// router.PUT("/api/tasks/:id", task.Update(storage))    // Use :id for path param
+	// router.DELETE("/api/tasks/:id", task.Delete(storage)) // Use :id for path param
 
 	//setup server
 
