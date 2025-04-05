@@ -90,3 +90,60 @@ func GetList(storage storage.Storage) gin.HandlerFunc {
 		c.JSON(http.StatusOK, tasks)
 	}
 }
+
+func Update(storage storage.Storage) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Param("id")
+		if id == "" {
+			c.JSON(http.StatusBadRequest, response.GeneralError(fmt.Errorf("no task id passed")))
+			return
+		}
+
+		intID, err := strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, response.GeneralError(fmt.Errorf("invalid id %s", id)))
+			return
+		}
+
+		var task types.Task
+		if err := c.ShouldBindJSON(&task); err != nil {
+			c.JSON(http.StatusBadRequest, response.GeneralError(err))
+			return
+		}
+
+		updatedTask, err := storage.UpdateTask(intID, task.Title, task.Description, task.Deadline)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, response.GeneralError(err))
+			return
+		}
+
+		c.JSON(http.StatusOK, updatedTask)
+	}
+}
+
+func Delete(storage storage.Storage) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id := c.Param("id")
+		if id == "" {
+			c.JSON(http.StatusBadRequest, response.GeneralError(fmt.Errorf("no task id passed")))
+			return
+		}
+
+		intID, err := strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, response.GeneralError(fmt.Errorf("invalid id %s", id)))
+			return
+		}
+
+		rowsAffected, err := storage.DeleteTask(intID)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, response.GeneralError(err))
+			return
+		}
+
+		c.JSON(http.StatusOK, gin.H{
+			"status":      "OK",
+			"row_deleted": rowsAffected,
+		})
+	}
+}

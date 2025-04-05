@@ -107,3 +107,36 @@ func (s *Postgres) GetTasks() ([]types.Task, error) {
 
 	return tasks, nil
 }
+
+func (s *Postgres) UpdateTask(id int64, title string, description string, deadline types.Date) (types.Task, error) {
+	formattedDate := deadline.Time.Format("2006-01-02")
+
+	_, err := s.Db.Exec(
+		"UPDATE tasks SET title = $1, description = $2, deadline = $3 WHERE id = $4",
+		title, description, formattedDate, id,
+	)
+	if err != nil {
+		return types.Task{}, err
+	}
+
+	return types.Task{
+		ID:          id,
+		Title:       title,
+		Description: description,
+		Deadline:    deadline,
+	}, nil
+}
+
+func (s *Postgres) DeleteTask(id int64) (int64, error) {
+	res, err := s.Db.Exec("DELETE FROM tasks WHERE id = $1", id)
+	if err != nil {
+		return 0, err
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
+	return rowsAffected, nil
+}

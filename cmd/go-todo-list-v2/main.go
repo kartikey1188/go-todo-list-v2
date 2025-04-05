@@ -37,8 +37,8 @@ func main() {
 	router.POST("/api/tasks", task.New(storage))
 	router.GET("/api/tasks/:id", task.GetById(storage))
 	router.GET("/api/tasks", task.GetList(storage))
-	// router.PUT("/api/tasks/:id", task.Update(storage))
-	// router.DELETE("/api/tasks/:id", task.Delete(storage))
+	router.PUT("/api/tasks/:id", task.Update(storage))
+	router.DELETE("/api/tasks/:id", task.Delete(storage))
 
 	//setting up server (with graceful shutdown)
 
